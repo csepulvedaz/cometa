@@ -20,13 +20,14 @@ import { Input } from "@/components/ui/input";
 import Bill from "@/components/custom/Bill";
 
 // Services
-import { getTableBill } from "@/services/orderServices";
+import { getBill } from "@/services/orderServices";
 
 const formSchema = z.object({
   table: z.coerce.number().min(1, "Mesa inválida"),
+  installments: z.coerce.number().min(1, "Cantidad inválida"),
 });
 
-const BillForm = () => {
+const BillForm = ({ isPayment }: any) => {
   const { toast } = useToast();
 
   const [loading, setLoading] = useState(false);
@@ -36,6 +37,7 @@ const BillForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       table: "",
+      installments: 1,
     },
   });
 
@@ -43,12 +45,15 @@ const BillForm = () => {
     try {
       setLoading(true);
       console.log("form data: ", data);
-      const res = await getTableBill(data.table);
+      const res = await getBill(data.table);
       if (!res) {
         toast({
           title: "No hay información para esa mesa",
           variant: "destructive",
         });
+      }
+      if (isPayment) {
+        res.installments = data.installments;
       }
       setBill(res);
       form.reset();
@@ -60,7 +65,7 @@ const BillForm = () => {
   }
 
   return bill ? (
-    <Bill bill={bill} setBill={setBill} />
+    <Bill bill={bill} setBill={setBill} isPayment={isPayment} />
   ) : (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
@@ -77,6 +82,21 @@ const BillForm = () => {
             </FormItem>
           )}
         />
+        {isPayment && (
+          <FormField
+            control={form.control}
+            name="installments"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Dividir la cuenta en:</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ingrege el número de pagos" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? <ClipLoader size={25} color="#FFFFFF" /> : "Consultar"}
         </Button>
