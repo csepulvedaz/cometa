@@ -22,4 +22,13 @@ export const ORDER_BILL_CONFIG: any = {
     title: "Estado",
     builder: (val: any) => ORDER_STATUS[val],
   },
+  installments: {
+    title: "Nro de Pagos",
+    builder: (val: any) => val,
+  },
+  toPay: {
+    title: "A pagar",
+    builder: (val: any) => formatCurrency(val),
+  },
+
 };

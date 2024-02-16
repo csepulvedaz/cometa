@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 // Constants
 import { ORDER_BILL_CONFIG } from "@/constants/orderConstants";
 
+// Services
+import { payBill, getBill } from "@/services/orderServices";
+
 type BillItemProps = {
   title: string;
   value: string;
@@ -11,6 +14,7 @@ type BillItemProps = {
 type BillProps = {
   bill: any;
   setBill: any;
+  isPayment: boolean;
 };
 
 const BillItem = ({ title, value }: BillItemProps) => {
@@ -22,10 +26,31 @@ const BillItem = ({ title, value }: BillItemProps) => {
   );
 };
 
-const Bill = ({ bill, setBill }: BillProps) => {
-  const handleOk = () => {
-    setBill(null);
+const Bill = ({ bill, setBill, isPayment }: BillProps) => {
+  const isPaid = bill.status === "paid";
+
+  const handleClick = async () => {
+    if (isPayment && !isPaid) {
+      try {
+        await payBill({
+          table: bill.table,
+          paid: bill.total / bill.installments,
+        });
+        const newBill = await getBill(bill.table);
+        setBill({
+          ...newBill,
+          installments: bill.installments,
+          toPay: newBill.status === "paid" ? 0 : bill.toPay,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      setBill(null);
+    }
   };
+
+  const buttonLabel = isPayment && !isPaid ? "Pagar" : "Volver";
 
   return (
     <div className="flex flex-col gap-4">
@@ -35,8 +60,8 @@ const Bill = ({ bill, setBill }: BillProps) => {
         const value = config.builder(bill[key]);
         return <BillItem key={key} title={title} value={value} />;
       })}
-      <Button onClick={handleOk} className="w-full">
-        Ok
+      <Button onClick={handleClick} className="w-full">
+        {buttonLabel}
       </Button>
     </div>
   );
