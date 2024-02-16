@@ -15,7 +15,12 @@ def create_order(order: Order) -> Order:
     with open(ORDERS_FILE, 'r') as file:
         data = json.load(file)
         orders = data['orders']
-        orders.append(order.dict())
+        for i, existing_order in enumerate(orders):
+            if existing_order['table'] == order.table:
+                orders[i] = order.dict()
+                break
+        else:
+            orders.append(order.dict())
         data['orders'] = orders
     with open(ORDERS_FILE, 'w') as file:
         json.dump(data, file, indent=4)

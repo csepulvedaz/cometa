@@ -21,6 +21,6 @@ export const throwResErrors = (error: any) => {
 			message: detail[0].msg,
 		};
 	}
-	console.error("Internal error", detail?.internal ?? detail.message ?? "Unknown");
+	console.error("Internal error", detail?.internal ?? detail?.message ?? "Unknown");
 	throw detail;
 };

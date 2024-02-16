@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from typing import Optional
 
 # Schemas
 from api.schemas.order_schemas import Order, OrderCreate, OrderBill, OrderPay
@@ -37,7 +38,7 @@ def create_order(order: OrderCreate):
         ORDER_CREATION_ERROR.raise_exception(exception=e)
 
 
-@router.get("/", response_model=OrderBill)
+@router.get("/{table}", response_model=Optional[OrderBill])
 def get_order_bill(table: int):
     if table < 1:
         INVALID_ORDER_TABLE_ERROR.raise_exception()
