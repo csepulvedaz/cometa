@@ -1,13 +1,13 @@
 {
     "orders": [
         {
-            "table": 2,
-            "quantity": 3,
-            "status": "pending",
-            "total": 1500.0,
-            "paid": 0,
-            "created_at": "2024-02-15T20:54:04.251290",
-            "updated_at": "2024-02-15T20:54:04.251298"
+            "table": 1,
+            "quantity": 25,
+            "status": "paid",
+            "total": 12500.0,
+            "paid": 12500.0,
+            "created_at": "2024-02-15T22:14:04.722633",
+            "updated_at": "2024-02-15T22:15:38.314048"
         }
     ]
 }

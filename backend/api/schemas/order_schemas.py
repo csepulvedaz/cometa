@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from datetime import datetime
 from enum import Enum
 
 class OrderStatus(Enum):
@@ -12,8 +11,8 @@ class Order(BaseModel):
     status: str = OrderStatus.PENDING.value
     total: float
     paid: float = 0
-    created_at: str = datetime.now().isoformat()
-    updated_at: str = datetime.now().isoformat()
+    created_at: str = ""
+    updated_at: str= ""
 
 
 class OrderCreate(BaseModel):

@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 # Schemas
 from api.schemas.order_schemas import Order, OrderBill, OrderStatus
@@ -12,6 +13,8 @@ logger = logging.getLogger("api")
 
 def create_order(order: Order) -> Order:
     logger.info("Creating order")
+    order.created_at = datetime.now().isoformat()
+    order.updated_at = datetime.now().isoformat()
     with open(ORDERS_FILE, 'r') as file:
         data = json.load(file)
         orders = data['orders']
@@ -49,6 +52,7 @@ def pay_order_by_table(pay: OrderBill) -> OrderBill:
                 else:
                     order['paid'] = order['total']
                     order['status'] = OrderStatus.PAID.value
+                order["updated_at"] = datetime.now().isoformat()
                 with open(ORDERS_FILE, 'w') as file:
                     json.dump(data, file, indent=4)
                 return OrderBill(**order)
