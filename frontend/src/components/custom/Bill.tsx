@@ -36,8 +36,12 @@ const Bill = ({ bill, setBill, isPayment }: BillProps) => {
           table: bill.table,
           paid: bill.total / bill.installments,
         });
-        const res = await getBill(bill.table);
-        setBill({ ...res, installments: bill.installments });
+        const newBill = await getBill(bill.table);
+        setBill({
+          ...newBill,
+          installments: bill.installments,
+          toPay: newBill.status === "paid" ? 0 : bill.toPay,
+        });
       } catch (err) {
         console.error(err);
       }

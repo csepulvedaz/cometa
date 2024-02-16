@@ -54,6 +54,7 @@ const BillForm = ({ isPayment }: any) => {
       }
       if (isPayment) {
         res.installments = data.installments;
+        res.toPay = res.total / data.installments;
       }
       setBill(res);
       form.reset();

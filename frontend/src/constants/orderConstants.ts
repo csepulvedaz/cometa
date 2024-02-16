@@ -26,4 +26,9 @@ export const ORDER_BILL_CONFIG: any = {
     title: "Nro de Pagos",
     builder: (val: any) => val,
   },
+  toPay: {
+    title: "A pagar",
+    builder: (val: any) => formatCurrency(val),
+  },
+
 };
