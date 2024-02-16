@@ -33,6 +33,7 @@ def create_order(order: OrderCreate):
         INSUFFICIENT_STOCK_ERROR.raise_exception()
     try:
         new_order = Order(table=order.table, quantity=order.quantity, total=order.quantity * PRICE)
+        stock_repository.subtract_stock(order.quantity)
         return order_repository.create_order(new_order)
     except Exception as e:
         ORDER_CREATION_ERROR.raise_exception(exception=e)

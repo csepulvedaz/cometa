@@ -20,3 +20,10 @@ def update_stock(quantity: int) -> Stock:
 def check_stock(quantity: int) -> bool:
     stock = get_stock()
     return stock.quantity >= quantity
+
+def subtract_stock(quantity: int) -> Stock:
+    stock = get_stock()
+    new_quantity = stock.quantity - quantity
+    if new_quantity < 0:
+        raise ValueError("Insufficient stock")
+    return update_stock(new_quantity)
